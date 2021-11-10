@@ -1,14 +1,30 @@
 import requests
 from tkinter import *
 from tkinter import ttk
+import sqlite3
 
 root = Tk()
 root.title("Main Screen")
+root.geometry("1100x700")
 
 order_screen = Listbox(root, height=30, width=45)
 order_screen.grid(row=1, column=0, columnspan=3, rowspan=49)
-menu_screen = PanedWindow(root,  height=30, width=45)
+menu_screen = PanedWindow(root, height=30, width=45)
 menu_screen.grid(row=1, column=3, columnspan=4, rowspan=49)
+
+# Databases
+
+# Create a database or connect to one
+conn = sqlite3.connect('restPOS.db')
+
+# create cursor
+c = conn.cursor()
+
+# commit changes
+conn.commit()
+
+# Close Connection
+conn.close()
 
 
 def memo():
