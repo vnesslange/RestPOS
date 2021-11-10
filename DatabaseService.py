@@ -31,3 +31,5 @@ def query_entrees():
     print(c.fetchall())
     conn.commit()
     conn.close()
+
+
