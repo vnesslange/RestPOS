@@ -5,9 +5,10 @@ from tkinter import ttk
 root = Tk()
 root.title("Main Screen")
 
-order_screen = Frame(root)
-order_screen.grid(row=1, column=0, columnspan=3, rowspan=5)
-menu_screen = Frame(root)
+order_screen = Listbox(root, height=30, width=45)
+order_screen.grid(row=1, column=0, columnspan=3, rowspan=49)
+menu_screen = PanedWindow(root,  height=30, width=45)
+menu_screen.grid(row=1, column=3, columnspan=4, rowspan=49)
 
 
 def memo():
@@ -40,9 +41,10 @@ entrees.grid(row=0, column=4)
 drinks.grid(row=0, column=5)
 desserts.grid(row=0, column=6)
 mgmt.grid(row=0, column=7)
-delete.grid(row=6, column=0)
-void.grid(row=6, column=1)
-look_up.grid(row=7, column=0)
-new.grid(row=7, column=1)
-payment.grid(row=6, column=2)
+delete.grid(row=51, column=0)
+void.grid(row=51, column=1)
+payment.grid(row=51, column=2)
+look_up.grid(row=52, column=0)
+new.grid(row=52, column=1)
+
 root.mainloop()
