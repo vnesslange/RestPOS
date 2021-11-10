@@ -2,6 +2,7 @@ import requests
 from tkinter import *
 from tkinter import ttk
 import sqlite3
+import DatabaseService
 
 root = Tk()
 root.title("Main Screen")
@@ -12,23 +13,22 @@ order_screen.grid(row=1, column=0, columnspan=3, rowspan=49)
 menu_screen = PanedWindow(root, height=30, width=45)
 menu_screen.grid(row=1, column=3, columnspan=4, rowspan=49)
 
-# Databases
-
-# Create a database or connect to one
-conn = sqlite3.connect('restPOS.db')
-
-# create cursor
-c = conn.cursor()
-
-# commit changes
-conn.commit()
-
-# Close Connection
-conn.close()
-
 
 def memo():
     return
+
+
+def entrees_screen():
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("SELECT *, oid FROM entrees")
+    records = c.fetchall()
+    print(records)
+    for record in records:
+        query_label = Button(menu_screen, padx=40, pady=20, text=record[0])
+        query_label.pack()
+    conn.commit()
+    conn.close()
 
 
 # Defining Buttons
@@ -37,7 +37,7 @@ memo = Button(root, text="Memo", padx=40, pady=20, command=memo)
 modify = Button(root, text="Modify", padx=40, pady=20, command=memo)
 fast_screen = Button(root, text="Fast Screen", padx=40, pady=20, command=memo)
 apps = Button(root, text="Apps", padx=40, pady=20, command=memo)
-entrees = Button(root, text="Entrees", padx=40, pady=20, command=memo)
+entrees = Button(root, text="Entrees", padx=40, pady=20, command=entrees_screen)
 drinks = Button(root, text="Drinks", padx=40, pady=20, command=memo)
 desserts = Button(root, text="Desserts", padx=40, pady=20, command=memo)
 mgmt = Button(root, text="MGMT", padx=40, pady=20, command=memo)
