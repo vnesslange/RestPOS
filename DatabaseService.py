@@ -10,7 +10,6 @@ def microservice():
     r = requests.get("http://127.0.0.1:5000/")
     microservice_dict = dict(r.json())
     values = list(microservice_dict.values())
-    print(values)
     microservice_insert(values[0], values[1], values[2], values[3])
     return "Success"
 
