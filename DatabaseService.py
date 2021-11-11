@@ -1,4 +1,26 @@
 import sqlite3
+import requests
+from flask import Flask
+
+app = Flask(__name__)
+
+
+@app.route('/', methods=['GET', 'POST'])
+def microservice():
+    r = requests.get("http://127.0.0.1:5000/")
+    r.json()
+    return "Success"
+
+
+def microservice_table():
+    conn = sqlite3.connect('archive.db')
+    c = conn.cursor()
+    c.execute("""CREATE TABLE entrees (
+                    entree_name text,
+                    price int
+                    )""")
+    conn.commit()
+    conn.close()
 
 
 def entree_table():
@@ -33,3 +55,4 @@ def query_entrees():
     conn.close()
 
 
+app.run(port=8000)
