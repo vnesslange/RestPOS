@@ -238,8 +238,8 @@ def delete_drinks():
     delete_drinks_num_label.grid(row=0, column=0)
 
     delete_drinks_submit = Button(root, text="Delete Drink",
-                                command=lambda: [delete_drinks_records(delete_drinks_num.get()),
-                                                 clear_for_delete(delete_drinks_num)])
+                                  command=lambda: [delete_drinks_records(delete_drinks_num.get()),
+                                                   clear_for_delete(delete_drinks_num)])
     delete_drinks_submit.grid(row=2, columnspan=2, pady=10, padx=10, ipadx=100)
 
 
@@ -323,8 +323,8 @@ def delete_desserts():
     delete_desserts_num_label.grid(row=0, column=0)
 
     delete_desserts_submit = Button(root, text="Delete Dessert",
-                                command=lambda: [delete_desserts_records(delete_desserts_num.get()),
-                                                 clear_for_delete(delete_desserts_num)])
+                                    command=lambda: [delete_desserts_records(delete_desserts_num.get()),
+                                                     clear_for_delete(delete_desserts_num)])
     delete_desserts_submit.grid(row=2, columnspan=2, pady=10, padx=10, ipadx=100)
 
 

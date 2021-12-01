@@ -18,8 +18,14 @@ def memo():
     return
 
 
+def clear_menu_screen():
+    for menu_buttons in menu_screen.winfo_children():
+        menu_buttons.destroy()
+
+
 def mgmt():
     """Takes you to screen to access the data base for CRUD"""
+    clear_menu_screen()
     import mgmt
     Button(menu_screen, padx=40, pady=20, text="Edit Entrees", command=mgmt.edit_entrees).pack()
     Button(menu_screen, padx=40, pady=20, text="Edit Apps", command=mgmt.edit_apps).pack()
@@ -34,6 +40,7 @@ def create_temp_button(record, number):
 
 def entrees_screen():
     """Function populates buttons for entree screen"""
+    clear_menu_screen()
     conn = sqlite3.connect('restPOS.db')
     c = conn.cursor()
     c.execute("SELECT *, oid FROM entrees")
@@ -47,6 +54,7 @@ def entrees_screen():
 
 def apps_screen():
     """Function populates buttons for app screen"""
+    clear_menu_screen()
     conn = sqlite3.connect('restPOS.db')
     c = conn.cursor()
     c.execute("SELECT *, oid FROM apps")
@@ -60,6 +68,7 @@ def apps_screen():
 
 def drinks_screen():
     """Function populates buttons for drinks screen"""
+    clear_menu_screen()
     conn = sqlite3.connect('restPOS.db')
     c = conn.cursor()
     c.execute("SELECT *, oid FROM drinks")
@@ -73,6 +82,7 @@ def drinks_screen():
 
 def desserts_screen():
     """Function populates buttons for desserts screen"""
+    clear_menu_screen()
     conn = sqlite3.connect('restPOS.db')
     c = conn.cursor()
     c.execute("SELECT *, oid FROM desserts")
