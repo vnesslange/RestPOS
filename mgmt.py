@@ -11,6 +11,11 @@ def clear(name, price):
     price.delete(0, END)
 
 
+def clear_for_delete(number):
+    """Function to Clear Delete text box"""
+    number.delete(0, END)
+
+
 # Functions for Entrees
 
 def edit_entrees():
@@ -19,7 +24,7 @@ def edit_entrees():
     root.geometry("200x300")
     Button(root, padx=40, pady=20, text="Add Entree", command=add_entrees).pack()
     Button(root, padx=40, pady=20, text="Edit Entree", command="").pack()
-    Button(root, padx=40, pady=20, text="Delete Entree", command="").pack()
+    Button(root, padx=40, pady=20, text="Delete Entree", command=delete_entrees).pack()
     Button(root, padx=40, pady=20, text="Display all Entree", command=display_entrees).pack()
 
 
@@ -40,6 +45,30 @@ def add_entrees():
                            command=lambda: [entree_records(entree_name.get(), entree_price.get()),
                                             clear(entree_name, entree_price)])
     entree_submit.grid(row=3, columnspan=2, pady=10, padx=10, ipadx=100)
+
+
+def delete_entrees():
+    root = Tk()
+    root.title("Entrees")
+    root.geometry("400x250")
+    delete_entree_num = Entry(root, width=30)
+    delete_entree_num.grid(row=0, column=1)
+    delete_entree_num_label = Label(root, text="Enter ID number of Entree:")
+    delete_entree_num_label.grid(row=0, column=0)
+
+    delete_entree_submit = Button(root, text="Delete Entree",
+                                  command=lambda: [delete_entrees_records(delete_entree_num.get()),
+                                                   clear_for_delete(delete_entree_num)])
+    delete_entree_submit.grid(row=2, columnspan=2, pady=10, padx=10, ipadx=100)
+
+
+def delete_entrees_records(delete_entree_num):
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("DELETE from entrees WHERE oid= " + delete_entree_num)
+
+    conn.commit()
+    conn.close()
 
 
 def entree_records(entree_name, price):
@@ -80,7 +109,7 @@ def edit_apps():
     root.geometry("200x300")
     Button(root, padx=40, pady=20, text="Add Apps", command=add_apps).pack()
     Button(root, padx=40, pady=20, text="Edit Apps", command="").pack()
-    Button(root, padx=40, pady=20, text="Delete Apps", command="").pack()
+    Button(root, padx=40, pady=20, text="Delete Apps", command=delete_apps).pack()
     Button(root, padx=40, pady=20, text="Display all Apps", command=display_apps).pack()
 
 
@@ -114,6 +143,30 @@ def app_records(app_name, price):
     conn.close()
 
 
+def delete_apps():
+    root = Tk()
+    root.title("Apps")
+    root.geometry("400x250")
+    delete_apps_num = Entry(root, width=30)
+    delete_apps_num.grid(row=0, column=1)
+    delete_apps_num_label = Label(root, text="Enter ID number of App:")
+    delete_apps_num_label.grid(row=0, column=0)
+
+    apps_entree_submit = Button(root, text="Delete App",
+                                command=lambda: [delete_apps_records(delete_apps_num.get()),
+                                                 clear_for_delete(delete_apps_num)])
+    apps_entree_submit.grid(row=2, columnspan=2, pady=10, padx=10, ipadx=100)
+
+
+def delete_apps_records(delete_apps_num):
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("DELETE from apps WHERE oid= " + delete_apps_num)
+
+    conn.commit()
+    conn.close()
+
+
 def display_apps():
     root = Tk()
     root.title("Apps")
@@ -140,7 +193,7 @@ def edit_drinks():
     root.geometry("200x300")
     Button(root, padx=40, pady=20, text="Add Drinks", command=add_drinks).pack()
     Button(root, padx=40, pady=20, text="Edit Drinks", command="").pack()
-    Button(root, padx=40, pady=20, text="Delete Drinks", command="").pack()
+    Button(root, padx=40, pady=20, text="Delete Drinks", command=delete_drinks).pack()
     Button(root, padx=40, pady=20, text="Display all Drinks", command=display_drinks).pack()
 
 
@@ -175,6 +228,30 @@ def drinks_records(drinks_name, price):
     conn.close()
 
 
+def delete_drinks():
+    root = Tk()
+    root.title("Drinks")
+    root.geometry("400x250")
+    delete_drinks_num = Entry(root, width=30)
+    delete_drinks_num.grid(row=0, column=1)
+    delete_drinks_num_label = Label(root, text="Enter ID number of Drink:")
+    delete_drinks_num_label.grid(row=0, column=0)
+
+    delete_drinks_submit = Button(root, text="Delete Drink",
+                                command=lambda: [delete_drinks_records(delete_drinks_num.get()),
+                                                 clear_for_delete(delete_drinks_num)])
+    delete_drinks_submit.grid(row=2, columnspan=2, pady=10, padx=10, ipadx=100)
+
+
+def delete_drinks_records(delete_drinks_num):
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("DELETE from drinks WHERE oid= " + delete_drinks_num)
+
+    conn.commit()
+    conn.close()
+
+
 def display_drinks():
     root = Tk()
     root.title("Drinks")
@@ -201,8 +278,9 @@ def edit_desserts():
     root.geometry("200x300")
     Button(root, padx=40, pady=20, text="Add Desserts", command=add_desserts).pack()
     Button(root, padx=40, pady=20, text="Edit Desserts", command="").pack()
-    Button(root, padx=40, pady=20, text="Delete Desserts", command="").pack()
+    Button(root, padx=40, pady=20, text="Delete Desserts", command=delete_desserts).pack()
     Button(root, padx=40, pady=20, text="Display all Desserts", command=display_desserts).pack()
+
 
 def add_desserts():
     root = Tk()
@@ -218,8 +296,8 @@ def add_desserts():
     desserts_price_label.grid(row=1, column=0)
 
     desserts_submit = Button(root, text="Add Desserts",
-                           command=lambda: [desserts_records(desserts_name.get(), desserts_price.get()),
-                                            clear(desserts_name,desserts_price)])
+                             command=lambda: [desserts_records(desserts_name.get(), desserts_price.get()),
+                                              clear(desserts_name, desserts_price)])
     desserts_submit.grid(row=3, columnspan=2, pady=10, padx=10, ipadx=100)
 
 
@@ -234,6 +312,29 @@ def desserts_records(desserts_name, price):
     conn.commit()
     conn.close()
 
+
+def delete_desserts():
+    root = Tk()
+    root.title("Desserts")
+    root.geometry("400x250")
+    delete_desserts_num = Entry(root, width=30)
+    delete_desserts_num.grid(row=0, column=1)
+    delete_desserts_num_label = Label(root, text="Enter ID number of Dessert:")
+    delete_desserts_num_label.grid(row=0, column=0)
+
+    delete_desserts_submit = Button(root, text="Delete Dessert",
+                                command=lambda: [delete_desserts_records(delete_desserts_num.get()),
+                                                 clear_for_delete(delete_desserts_num)])
+    delete_desserts_submit.grid(row=2, columnspan=2, pady=10, padx=10, ipadx=100)
+
+
+def delete_desserts_records(delete_desserts_num):
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("DELETE from desserts WHERE oid= " + delete_desserts_num)
+
+    conn.commit()
+    conn.close()
 
 
 def display_desserts():
