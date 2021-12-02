@@ -41,6 +41,31 @@ def microservice_insert(StringBool, FloatBool, FloatProperty, StringProperty):
     conn.close()
 
 
+def order_table():
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("""CREATE TABLE orders (
+                    order_number int,
+                    item_name text,
+                    price int
+                    )""")
+    conn.commit()
+    conn.close()
+
+
+def order_insert(order_number, item_name, price):
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO orders VALUES(:order_number, :item_name, :price)",
+              {"order_number": order_number,
+               "item_name": item_name,
+               "price": price
+               }
+              )
+    conn.commit()
+    conn.close()
+
+
 def entree_table():
     conn = sqlite3.connect('restPOS.db')
     c = conn.cursor()
@@ -136,6 +161,7 @@ def query_drinks():
     conn.commit()
     conn.close()
 
+
 def desserts_table():
     conn = sqlite3.connect('restPOS.db')
     c = conn.cursor()
@@ -166,7 +192,6 @@ def query_desserts():
     print(c.fetchall())
     conn.commit()
     conn.close()
-
 
 
 # app.run(port=8000)
