@@ -6,14 +6,25 @@ import DatabaseService
 
 root = Tk()
 root.title("Main Screen")
-root.geometry("1100x700")
+root.geometry("1195x700")
+order_screen_frame = Frame(root)
+order_screen_frame.grid(row=1, column=0, columnspan=3, rowspan=49)
+order_screen_scroll = Scrollbar(order_screen_frame, orient=VERTICAL)
+order_screen = Listbox(order_screen_frame, height=30, width=50, yscrollcommand=order_screen_scroll.set)
+order_screen.grid(row=2, column=0, sticky=N + S + W, columnspan=3, rowspan=48)
+menu_screen = Frame(root)
+menu_screen.grid(row=8, column=3, columnspan=5, rowspan=49, sticky=N + E + S + W)
+order_screen_scroll.config(command=order_screen.yview)
+order_screen_scroll.grid(row=2, column=4)
+menu_screen.pack_propagate(0)
 
-order_screen = Listbox(root, height=30, width=45)
-order_screen.grid(row=1, column=0, columnspan=3, rowspan=49)
-menu_screen = PanedWindow(root, height=30, width=45)
-menu_screen.grid(row=1, column=3, columnspan=4, rowspan=49)
 order_list = []
 order_number = 1
+root.config(background="#ced3db")
+menu_screen.config(background="#ced3db")
+order_screen.config()
+
+
 
 
 def clear_menu_screen():
@@ -24,6 +35,8 @@ def clear_menu_screen():
 
 def clear_order_screen():
     order_screen.delete(0, END)
+
+
 order_number += 1
 
 
@@ -37,65 +50,50 @@ def mgmt():
     Button(menu_screen, padx=40, pady=20, text="Edit Desserts", command=mgmt.edit_desserts).pack()
 
 
+
+
 def create_temp_button(record, number):
     """Function creates temp buttons for the screen you are on"""
-    number = Button(menu_screen, padx=40, pady=20, text=record[0], command=lambda: order(record[0], record[1])).pack()
+    number = Button(menu_screen, padx=40, pady=20, bd=3, text=record[0],width=8, command=lambda: order(record[0], record[1]))
+    number.pack()
+
+
+
+
+def query_db(statement):
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute(statement)
+    records = c.fetchall()
+    for record in records:
+        create_temp_button(record, record[2])
+
+    conn.commit()
+    conn.close()
 
 
 def entrees_screen():
     """Function populates buttons for entree screen"""
     clear_menu_screen()
-    conn = sqlite3.connect('restPOS.db')
-    c = conn.cursor()
-    c.execute("SELECT *, oid FROM entrees")
-    records = c.fetchall()
-    for record in records:
-        create_temp_button(record, record[2])
-
-    conn.commit()
-    conn.close()
+    query_db("SELECT *, oid FROM entrees")
 
 
 def apps_screen():
     """Function populates buttons for app screen"""
     clear_menu_screen()
-    conn = sqlite3.connect('restPOS.db')
-    c = conn.cursor()
-    c.execute("SELECT *, oid FROM apps")
-    records = c.fetchall()
-    for record in records:
-        create_temp_button(record, record[2])
-
-    conn.commit()
-    conn.close()
+    query_db("SELECT *, oid FROM apps")
 
 
 def drinks_screen():
     """Function populates buttons for drinks screen"""
     clear_menu_screen()
-    conn = sqlite3.connect('restPOS.db')
-    c = conn.cursor()
-    c.execute("SELECT *, oid FROM drinks")
-    records = c.fetchall()
-    for record in records:
-        create_temp_button(record, record[2])
-
-    conn.commit()
-    conn.close()
+    query_db("SELECT *, oid FROM drinks")
 
 
 def desserts_screen():
     """Function populates buttons for desserts screen"""
     clear_menu_screen()
-    conn = sqlite3.connect('restPOS.db')
-    c = conn.cursor()
-    c.execute("SELECT *, oid FROM desserts")
-    records = c.fetchall()
-    for record in records:
-        create_temp_button(record, record[2])
-
-    conn.commit()
-    conn.close()
+    query_db("SELECT *, oid FROM desserts")
 
 
 def order(name, price):
@@ -141,13 +139,23 @@ def order_look_up():
     clear_menu_screen()
     conn = sqlite3.connect('restPOS.db')
     c = conn.cursor()
-    c.execute("SELECT *, oid FROM orders")
+    c.execute("SELECT DISTINCT order_number FROM orders")
     records = c.fetchall()
     for record in records:
-        print(record)
+        Button(menu_screen, text=record, command=lambda: order_look_up_display(record)).pack()
 
     conn.commit()
     conn.close()
+
+
+def order_look_up_display(record):
+    clear_menu_screen()
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("SELECT *  FROM orders WHERE order_number = " + str(record[0]))
+    records = c.fetchall()
+    for record in records:
+        order(record[1], record[2])
 
 
 def delete_order_item():
@@ -165,38 +173,53 @@ def place_memo_on_order_screen(memo_text):
     order_screen.insert(END, memo_text)
 
 
+def payment_screen():
+    payment_screen_buttons()
+
+
+def payment_screen_buttons():
+    cash = Button(menu_screen, text="Cash", padx=40, pady=20, command="write_memo").pack()
+    card = Button(menu_screen, text="Credit", padx=40, pady=20, command="write_memo").pack()
+    split = Button(menu_screen, text="Split Payment", padx=40, pady=20, command="write_memo").pack()
+    return
+
+
 # Defining Permanent Buttons
 
-memo = Button(root, text="Memo", padx=40, pady=20, command=write_memo)
-modify = Button(root, text="Modify", padx=40, pady=20, command="")
-fast_screen = Button(root, text="Fast Screen", padx=40, pady=20, command="")
-apps = Button(root, text="Apps", padx=40, pady=20, command=apps_screen)
-entrees = Button(root, text="Entrees", padx=40, pady=20, command=entrees_screen)
-drinks = Button(root, text="Drinks", padx=40, pady=20, command=drinks_screen)
-desserts = Button(root, text="Desserts", padx=40, pady=20, command=desserts_screen)
-mgmt_screen = Button(root, text="MGMT", padx=40, pady=20, command=mgmt)
-delete = Button(root, text="Delete", padx=40, pady=20, command=delete_order_item)
-void = Button(root, text="Void", padx=40, pady=20, command="memo")
-look_up = Button(root, text="Look Up", padx=40, pady=20, command=order_look_up)
-new = Button(root, text="New Order", padx=40, pady=20, command=clear_order_screen)
-payment = Button(root, text="Payment", padx=40, pady=20, command="memo")
-send = Button(root, text="Send", padx=40, pady=20, command=send_order)
+Button.config(root, width=10)
+
+memo = Button(root, text="Memo", width=5, padx=40, pady=20, command=write_memo)
+modify = Button(root, text="Modify", width=5, padx=40, pady=20, command="")
+fast_screen = Button(root, text="Fast Screen", width=5, padx=40, pady=20, command="")
+apps = Button(root, text="Apps", width=7, padx=40, pady=20, command=apps_screen)
+entrees = Button(root, text="Entrees", width=7, padx=40, pady=20, command=entrees_screen)
+drinks = Button(root, text="Drinks", width=7, padx=40, pady=20, command=drinks_screen)
+desserts = Button(root, text="Desserts",  width=7,padx=40, pady=20, command=desserts_screen)
+mgmt_screen = Button(root, text="MGMT", width=7, padx=40, pady=20, command=mgmt)
+delete = Button(root, text="Delete", width=8, padx=40, pady=20, command=delete_order_item)
+void = Button(root, text="Void", width=8, padx=40, pady=20, background="#7a8aa3", foreground="#171e29", command="memo")
+look_up = Button(root, text="Look Up", width=8, padx=40, pady=20, command=order_look_up)
+new = Button(root, text="New Order", width=8, padx=40, pady=20, command=clear_order_screen)
+payment = Button(root, text="Payment", padx=40, pady=20, background="#7a8aa3", foreground="#171e29", width=8,
+                 command=payment_screen)
+send = Button(root, text="Send", padx=40, pady=20, activebackground="#7a8aa3", foreground="#171e29", width=8,
+              command=send_order)
 
 # Placing buttons on screen
 
-memo.grid(row=0, column=0)
-modify.grid(row=0, column=1)
-fast_screen.grid(row=0, column=2)
-apps.grid(row=0, column=3)
-entrees.grid(row=0, column=4)
-drinks.grid(row=0, column=5)
-desserts.grid(row=0, column=6)
-mgmt_screen.grid(row=0, column=7)
-delete.grid(row=51, column=0)
-void.grid(row=51, column=1)
-payment.grid(row=52, column=2)
-look_up.grid(row=52, column=0)
-new.grid(row=52, column=1)
-send.grid(row=51, column=2)
+memo.grid(row=0, column=0, sticky=N + E + S + W)
+modify.grid(row=0, column=1, sticky=N + E + S + W)
+fast_screen.grid(row=0, column=2, sticky=N + E + S + W)
+apps.grid(row=0, column=3, sticky=N + E + S + W)
+entrees.grid(row=0, column=4, sticky=N + E + S + W)
+drinks.grid(row=0, column=5, sticky=N + E + S + W)
+desserts.grid(row=0, column=6, sticky=N + E + S + W)
+mgmt_screen.grid(row=0, column=7, sticky=N + E + S + W)
+delete.grid(row=51, column=0, sticky=N + E + S + W)
+void.grid(row=51, column=1, sticky=N + E + S + W)
+payment.grid(row=52, column=2, sticky=N + E + S + W)
+look_up.grid(row=52, column=0, sticky=N + E + S + W)
+new.grid(row=52, column=1, sticky=N + E + S + W)
+send.grid(row=51, column=2, sticky=N + E + S + W)
 
 root.mainloop()
