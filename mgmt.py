@@ -107,15 +107,16 @@ def update_entrees_records(update_entree_num):
         entree_price_label.grid(row=1, column=0)
 
     entree_submit = Button(root, text="Add Entree",
-                           command=lambda: [update(entree_name.get(), entree_price.get(), update_entree_num),
-                                            clear(entree_name, entree_price)])
+                           command=lambda: [
+                               update_entrees_in_table(entree_name.get(), entree_price.get(), update_entree_num),
+                               clear(entree_name, entree_price)])
     entree_submit.grid(row=3, columnspan=2, pady=10, padx=10, ipadx=100)
 
     conn.commit()
     conn.close()
 
 
-def update(entree_name, price, record_id):
+def update_entrees_in_table(entree_name, price, record_id):
     conn = sqlite3.connect('restPOS.db')
     c = conn.cursor()
     c.execute("""UPDATE entrees SET
@@ -130,7 +131,6 @@ def update(entree_name, price, record_id):
                   "oid": record_id
 
               })
-
 
     conn.commit()
     conn.close()
@@ -173,7 +173,7 @@ def edit_apps():
     root.title("Edit Apps")
     root.geometry("200x300")
     Button(root, padx=40, pady=20, text="Add Apps", command=add_apps).pack()
-    Button(root, padx=40, pady=20, text="Edit Apps", command="").pack()
+    Button(root, padx=40, pady=20, text="Edit Apps", command=update_apps).pack()
     Button(root, padx=40, pady=20, text="Delete Apps", command=delete_apps).pack()
     Button(root, padx=40, pady=20, text="Display all Apps", command=display_apps).pack()
 
@@ -232,6 +232,70 @@ def delete_apps_records(delete_apps_num):
     conn.close()
 
 
+def update_apps():
+    root = Tk()
+    root.title("Apps")
+    root.geometry("400x250")
+    update_apps_num = Entry(root, width=30)
+    update_apps_num.grid(row=0, column=1)
+    update_apps_num_label = Label(root, text="Enter ID number of App:")
+    update_apps_num_label.grid(row=0, column=0)
+
+    update_apps_submit = Button(root, text="Get App",
+                                command=lambda: update_apps_records(update_apps_num.get()))
+
+    update_apps_submit.grid(row=2, columnspan=2, pady=10, padx=10, ipadx=100)
+
+
+def update_apps_records(update_apps_num):
+    root = Tk()
+    root.title("Apps")
+    root.geometry("400x250")
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("SELECT * from apps WHERE oid= " + update_apps_num)
+    records = c.fetchall()
+    for record in records:
+        apps_name = Entry(root, width=30)
+        apps_name.grid(row=0, column=1)
+        apps_name.insert(0, record[0])
+        apps_name_label = Label(root, text="Enter Name:")
+        apps_name_label.grid(row=0, column=0)
+        apps_price = Entry(root, width=30)
+        apps_price.grid(row=1, column=1)
+        apps_price.insert(0, record[1])
+        apps_price_label = Label(root, text="Enter Price:")
+        apps_price_label.grid(row=1, column=0)
+
+    apps_submit = Button(root, text="Add Apps",
+                         command=lambda: [update_apps_in_table(apps_name.get(), apps_price.get(), update_apps_num),
+                                          clear(apps_name, apps_price)])
+    apps_submit.grid(row=3, columnspan=2, pady=10, padx=10, ipadx=100)
+
+    conn.commit()
+    conn.close()
+
+
+def update_apps_in_table(apps_name, price, record_id):
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("""UPDATE apps SET
+            app_name = :app_name,
+            price = :price
+
+            WHERE oid = :oid""",
+              {
+                  "app_name": apps_name,
+                  "price": price,
+
+                  "oid": record_id
+
+              })
+
+    conn.commit()
+    conn.close()
+
+
 def display_apps():
     root = Tk()
     root.title("Apps")
@@ -257,7 +321,7 @@ def edit_drinks():
     root.title("Edit Drinks")
     root.geometry("200x300")
     Button(root, padx=40, pady=20, text="Add Drinks", command=add_drinks).pack()
-    Button(root, padx=40, pady=20, text="Edit Drinks", command="").pack()
+    Button(root, padx=40, pady=20, text="Edit Drinks", command=update_drinks).pack()
     Button(root, padx=40, pady=20, text="Delete Drinks", command=delete_drinks).pack()
     Button(root, padx=40, pady=20, text="Display all Drinks", command=display_drinks).pack()
 
@@ -317,6 +381,71 @@ def delete_drinks_records(delete_drinks_num):
     conn.close()
 
 
+def update_drinks():
+    root = Tk()
+    root.title("Drinks")
+    root.geometry("400x250")
+    update_drinks_num = Entry(root, width=30)
+    update_drinks_num.grid(row=0, column=1)
+    update_drinks_num_label = Label(root, text="Enter ID number of Drinks:")
+    update_drinks_num_label.grid(row=0, column=0)
+
+    update_drinks_submit = Button(root, text="Get Drink",
+                                  command=lambda: update_drinks_records(update_drinks_num.get()))
+
+    update_drinks_submit.grid(row=2, columnspan=2, pady=10, padx=10, ipadx=100)
+
+
+def update_drinks_records(update_drinks_num):
+    root = Tk()
+    root.title("Drinks")
+    root.geometry("400x250")
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("SELECT * from drinks WHERE oid= " + update_drinks_num)
+    records = c.fetchall()
+    for record in records:
+        drinks_name = Entry(root, width=30)
+        drinks_name.grid(row=0, column=1)
+        drinks_name.insert(0, record[0])
+        drinks_name_label = Label(root, text="Enter Name:")
+        drinks_name_label.grid(row=0, column=0)
+        drinks_price = Entry(root, width=30)
+        drinks_price.grid(row=1, column=1)
+        drinks_price.insert(0, record[1])
+        drinks_price_label = Label(root, text="Enter Price:")
+        drinks_price_label.grid(row=1, column=0)
+
+    drinks_submit = Button(root, text="Update Drink",
+                           command=lambda: [
+                               update_drinks_in_table(drinks_name.get(), drinks_price.get(), update_drinks_num),
+                               clear(drinks_name, drinks_price)])
+    drinks_submit.grid(row=3, columnspan=2, pady=10, padx=10, ipadx=100)
+
+    conn.commit()
+    conn.close()
+
+
+def update_drinks_in_table(drinks_name, price, record_id):
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("""UPDATE drinks SET
+            drinks_name = :drinks_name_name,
+            price = :price
+
+            WHERE oid = :oid""",
+              {
+                  "drinks_name_name": drinks_name,
+                  "price": price,
+
+                  "oid": record_id
+
+              })
+
+    conn.commit()
+    conn.close()
+
+
 def display_drinks():
     root = Tk()
     root.title("Drinks")
@@ -342,7 +471,7 @@ def edit_desserts():
     root.title("Edit Desserts")
     root.geometry("200x300")
     Button(root, padx=40, pady=20, text="Add Desserts", command=add_desserts).pack()
-    Button(root, padx=40, pady=20, text="Edit Desserts", command="").pack()
+    Button(root, padx=40, pady=20, text="Edit Desserts", command=update_desserts).pack()
     Button(root, padx=40, pady=20, text="Delete Desserts", command=delete_desserts).pack()
     Button(root, padx=40, pady=20, text="Display all Desserts", command=display_desserts).pack()
 
@@ -400,6 +529,73 @@ def delete_desserts_records(delete_desserts_num):
 
     conn.commit()
     conn.close()
+
+
+def update_desserts():
+    root = Tk()
+    root.title("Desserts")
+    root.geometry("400x250")
+    update_desserts_num = Entry(root, width=30)
+    update_desserts_num.grid(row=0, column=1)
+    update_desserts_num_label = Label(root, text="Enter ID number of Dessert:")
+    update_desserts_num_label.grid(row=0, column=0)
+
+    update_desserts_submit = Button(root, text="Get Dessert",
+                                    command=lambda: update_desserts_records(update_desserts_num.get()))
+
+    update_desserts_submit.grid(row=2, columnspan=2, pady=10, padx=10, ipadx=100)
+
+
+def update_desserts_records(update_desserts_num):
+    root = Tk()
+    root.title("Desserts")
+    root.geometry("400x250")
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("SELECT * from desserts WHERE oid= " + update_desserts_num)
+    records = c.fetchall()
+    for record in records:
+        desserts_name = Entry(root, width=30)
+        desserts_name.grid(row=0, column=1)
+        desserts_name.insert(0, record[0])
+        desserts_name_label = Label(root, text="Enter Name:")
+        desserts_name_label.grid(row=0, column=0)
+        desserts_price = Entry(root, width=30)
+        desserts_price.grid(row=1, column=1)
+        desserts_price.insert(0, record[1])
+        desserts_price_label = Label(root, text="Enter Price:")
+        desserts_price_label.grid(row=1, column=0)
+
+    desserts_submit = Button(root, text="Update Dessert",
+                             command=lambda: [update_desserts_in_table(desserts_name.get(), desserts_price.get(),
+                                                                       update_desserts_num),
+                                              clear(desserts_name, desserts_price)])
+    desserts_submit.grid(row=3, columnspan=2, pady=10, padx=10, ipadx=100)
+
+    conn.commit()
+    conn.close()
+
+def update_desserts_in_table(desserts_name, price, record_id):
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("""UPDATE desserts SET
+            drinks_name = :desserts_name,
+            price = :price
+
+            WHERE oid = :oid""",
+              {
+                  "desserts_name": desserts_name,
+                  "price": price,
+
+                  "oid": record_id
+
+              })
+
+    conn.commit()
+    conn.close()
+
+
+
 
 
 def display_desserts():
