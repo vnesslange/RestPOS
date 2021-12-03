@@ -23,7 +23,7 @@ def edit_entrees():
     root.title("Edit Entrees")
     root.geometry("200x300")
     Button(root, padx=40, pady=20, text="Add Entree", command=add_entrees).pack()
-    Button(root, padx=40, pady=20, text="Edit Entree", command="").pack()
+    Button(root, padx=40, pady=20, text="Edit Entree", command=update_entrees).pack()
     Button(root, padx=40, pady=20, text="Delete Entree", command=delete_entrees).pack()
     Button(root, padx=40, pady=20, text="Display all Entree", command=display_entrees).pack()
 
@@ -66,6 +66,71 @@ def delete_entrees_records(delete_entree_num):
     conn = sqlite3.connect('restPOS.db')
     c = conn.cursor()
     c.execute("DELETE from entrees WHERE oid= " + delete_entree_num)
+
+    conn.commit()
+    conn.close()
+
+
+def update_entrees():
+    root = Tk()
+    root.title("Entrees")
+    root.geometry("400x250")
+    update_entree_num = Entry(root, width=30)
+    update_entree_num.grid(row=0, column=1)
+    update_entree_num_label = Label(root, text="Enter ID number of Entree:")
+    update_entree_num_label.grid(row=0, column=0)
+
+    update_entree_submit = Button(root, text="Get Entree",
+                                  command=lambda: update_entrees_records(update_entree_num.get()))
+
+    update_entree_submit.grid(row=2, columnspan=2, pady=10, padx=10, ipadx=100)
+
+
+def update_entrees_records(update_entree_num):
+    root = Tk()
+    root.title("Entrees")
+    root.geometry("400x250")
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("SELECT * from entrees WHERE oid= " + update_entree_num)
+    records = c.fetchall()
+    for record in records:
+        entree_name = Entry(root, width=30)
+        entree_name.grid(row=0, column=1)
+        entree_name.insert(0, record[0])
+        entree_name_label = Label(root, text="Enter Name:")
+        entree_name_label.grid(row=0, column=0)
+        entree_price = Entry(root, width=30)
+        entree_price.grid(row=1, column=1)
+        entree_price.insert(0, record[1])
+        entree_price_label = Label(root, text="Enter Price:")
+        entree_price_label.grid(row=1, column=0)
+
+    entree_submit = Button(root, text="Add Entree",
+                           command=lambda: [update(entree_name.get(), entree_price.get(), update_entree_num),
+                                            clear(entree_name, entree_price)])
+    entree_submit.grid(row=3, columnspan=2, pady=10, padx=10, ipadx=100)
+
+    conn.commit()
+    conn.close()
+
+
+def update(entree_name, price, record_id):
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("""UPDATE entrees SET
+            entree_name = :entree_name,
+            price = :price
+
+            WHERE oid = :oid""",
+              {
+                  "entree_name": entree_name,
+                  "price": price,
+
+                  "oid": record_id
+
+              })
+
 
     conn.commit()
     conn.close()
