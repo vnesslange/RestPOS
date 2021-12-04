@@ -4,7 +4,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
-
+"""
 @app.route('/', methods=['GET', 'POST'])
 def microservice():
     r = requests.get("http://127.0.0.1:5000/")
@@ -12,7 +12,21 @@ def microservice():
     values = list(microservice_dict.values())
     microservice_insert(values[0], values[1], values[2], values[3])
     return "Success"
+"""
+"""
+payload = {}
 
+with open("Modify.txt") as file:
+    for line in file:
+        command, description = line.strip().split(None, 1)
+        payload[command] = description.strip()
+
+
+@app.route('/', methods=['GET', 'POST'])
+def app_req():
+    global payload
+    return payload
+"""
 
 def microservice_table():
     conn = sqlite3.connect('archive.db')
@@ -49,6 +63,31 @@ def order_table():
                     item_name text,
                     price int
                     )""")
+    conn.commit()
+    conn.close()
+
+
+def payments_table():
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("""CREATE TABLE payments (
+                    order_number int,
+                    payment text,
+                    total int
+                    )""")
+    conn.commit()
+    conn.close()
+
+
+def payments_insert(order_number, payment, total):
+    conn = sqlite3.connect('restPOS.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO payments VALUES(:order_number, :payment, :total)",
+              {"order_number": order_number,
+               "payment": payment,
+               "price": total
+               }
+              )
     conn.commit()
     conn.close()
 
@@ -194,7 +233,7 @@ def query_desserts():
     conn.close()
 
 
-# app.run(port=8000)
+#app.run(port=8000)
 """
 apps_insert("Spinach Dip", 8)
 apps_insert("Onion Rings", 5)

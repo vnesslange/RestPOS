@@ -22,10 +22,10 @@ def edit_entrees():
     root = Tk()
     root.title("Edit Entrees")
     root.geometry("200x300")
-    Button(root, padx=40, pady=20, text="Add Entree", command=add_entrees).pack()
-    Button(root, padx=40, pady=20, text="Edit Entree", command=update_entrees).pack()
-    Button(root, padx=40, pady=20, text="Delete Entree", command=delete_entrees).pack()
-    Button(root, padx=40, pady=20, text="Display all Entree", command=display_entrees).pack()
+    Button(root, padx=40, pady=20, text="Add Entree", width=8, command=add_entrees).pack()
+    Button(root, padx=40, pady=20, text="Edit Entree", width=8, command=update_entrees).pack()
+    Button(root, padx=40, pady=20, text="Delete Entree", width=8, command=delete_entrees).pack()
+    Button(root, padx=40, pady=20, text="Display all Entree", width=8, command=display_entrees).pack()
 
 
 def add_entrees():
@@ -172,10 +172,10 @@ def edit_apps():
     root = Tk()
     root.title("Edit Apps")
     root.geometry("200x300")
-    Button(root, padx=40, pady=20, text="Add Apps", command=add_apps).pack()
-    Button(root, padx=40, pady=20, text="Edit Apps", command=update_apps).pack()
-    Button(root, padx=40, pady=20, text="Delete Apps", command=delete_apps).pack()
-    Button(root, padx=40, pady=20, text="Display all Apps", command=display_apps).pack()
+    Button(root, padx=40, pady=20, text="Add Apps", width=8, command=add_apps).pack()
+    Button(root, padx=40, pady=20, text="Edit Apps", width=8, command=update_apps).pack()
+    Button(root, padx=40, pady=20, text="Delete Apps", width=8, command=delete_apps).pack()
+    Button(root, padx=40, pady=20, text="Display all Apps", width=8, command=display_apps).pack()
 
 
 def add_apps():
@@ -320,10 +320,10 @@ def edit_drinks():
     root = Tk()
     root.title("Edit Drinks")
     root.geometry("200x300")
-    Button(root, padx=40, pady=20, text="Add Drinks", command=add_drinks).pack()
-    Button(root, padx=40, pady=20, text="Edit Drinks", command=update_drinks).pack()
-    Button(root, padx=40, pady=20, text="Delete Drinks", command=delete_drinks).pack()
-    Button(root, padx=40, pady=20, text="Display all Drinks", command=display_drinks).pack()
+    Button(root, padx=40, pady=20, text="Add Drinks", width=8, command=add_drinks).pack()
+    Button(root, padx=40, pady=20, text="Edit Drinks", width=8, command=update_drinks).pack()
+    Button(root, padx=40, pady=20, text="Delete Drinks", width=8, command=delete_drinks).pack()
+    Button(root, padx=40, pady=20, text="Display all Drinks", width=8, command=display_drinks).pack()
 
 
 def add_drinks():
@@ -470,10 +470,10 @@ def edit_desserts():
     root = Tk()
     root.title("Edit Desserts")
     root.geometry("200x300")
-    Button(root, padx=40, pady=20, text="Add Desserts", command=add_desserts).pack()
-    Button(root, padx=40, pady=20, text="Edit Desserts", command=update_desserts).pack()
-    Button(root, padx=40, pady=20, text="Delete Desserts", command=delete_desserts).pack()
-    Button(root, padx=40, pady=20, text="Display all Desserts", command=display_desserts).pack()
+    Button(root, padx=40, pady=20, text="Add Desserts", width=8, command=add_desserts).pack()
+    Button(root, padx=40, pady=20, text="Edit Desserts", width=8, command=update_desserts).pack()
+    Button(root, padx=40, pady=20, text="Delete Desserts", width=8, command=delete_desserts).pack()
+    Button(root, padx=40, pady=20, text="Display all Desserts", width=8, command=display_desserts).pack()
 
 
 def add_desserts():
@@ -575,6 +575,7 @@ def update_desserts_records(update_desserts_num):
     conn.commit()
     conn.close()
 
+
 def update_desserts_in_table(desserts_name, price, record_id):
     conn = sqlite3.connect('restPOS.db')
     c = conn.cursor()
@@ -593,9 +594,6 @@ def update_desserts_in_table(desserts_name, price, record_id):
 
     conn.commit()
     conn.close()
-
-
-
 
 
 def display_desserts():
